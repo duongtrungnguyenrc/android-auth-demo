@@ -1,10 +1,12 @@
 package com.main.app.repositories.implementations;
 
+import android.content.Context;
+
 import com.main.app.callbacks.IActionCallback;
 import com.main.app.data.models.User;
 import com.main.app.repositories.abstractions.IUserRepository;
 import com.main.app.services.api.APIClient;
-import com.main.app.services.auth.IUserService;
+import com.main.app.services.user.IUserService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,14 +16,14 @@ public class UserRepository implements IUserRepository {
     private final IUserService userService;
     private static UserRepository instance;
 
-    private UserRepository(){
+    private UserRepository(Context context){
         APIClient apiClient = APIClient.getInstance();
-        this.userService = apiClient.getClient().create(IUserService.class);
+        this.userService = apiClient.getClient(context).create(IUserService.class);
     }
 
-    public static UserRepository getInstance() {
+    public static UserRepository getInstance(Context context) {
         if(instance == null)
-            instance = new UserRepository();
+            instance = new UserRepository(context);
         return instance;
     }
     @Override

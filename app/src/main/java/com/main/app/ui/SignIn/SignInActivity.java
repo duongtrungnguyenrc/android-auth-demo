@@ -13,13 +13,15 @@ import com.main.app.data.dtos.SignInRequestDto;
 import com.main.app.data.dtos.SignInResponseDto;
 import com.main.app.databinding.ActivitySignInBinding;
 import com.main.app.repositories.implementations.AuthRepository;
+import com.main.app.services.api.APIClient;
+import com.main.app.services.api.AuthInterceptor;
 import com.main.app.ui.Main.MainActivity;
 import com.main.app.ui.SignUp.SignUpActivity;
 import com.main.app.utils.SecureTokenStorageUtil;
 
 public class SignInActivity extends AppCompatActivity {
     private ActivitySignInBinding activitySignInBinding;
-    private final AuthRepository authRepository = AuthRepository.getInstance();
+    private  AuthRepository authRepository;
 
     private SecureTokenStorageUtil secureTokenStorageUtil;
 
@@ -37,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void init() throws Exception {
+        authRepository =   AuthRepository.getInstance(getApplicationContext());
         this.secureTokenStorageUtil = SecureTokenStorageUtil.getInstance(getApplicationContext());
 
         this.activitySignInBinding.txtToRegister.setOnClickListener((View view) -> {
@@ -59,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
                                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                 startActivity(intent);
                             } catch (Exception exception) {
-
+                                Toast.makeText(SignInActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                             }
 
                         }

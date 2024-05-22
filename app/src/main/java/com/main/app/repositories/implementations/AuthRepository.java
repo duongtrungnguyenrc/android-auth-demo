@@ -1,5 +1,7 @@
 package com.main.app.repositories.implementations;
 
+import android.content.Context;
+
 import com.main.app.callbacks.IActionCallback;
 import com.main.app.data.dtos.SignInRequestDto;
 import com.main.app.data.dtos.SignInResponseDto;
@@ -17,14 +19,14 @@ public class AuthRepository implements IAuthRepository {
     private final IAuthService authService;
     private static AuthRepository instance;
 
-    private AuthRepository(){
+    private AuthRepository(Context context){
         APIClient apiClient = APIClient.getInstance();
-        this.authService = apiClient.getClient().create(IAuthService.class);
+        this.authService = apiClient.getClient(context).create(IAuthService.class);
     }
 
-    public static AuthRepository getInstance() {
+    public static AuthRepository getInstance(Context context) {
         if(instance == null)
-            instance = new AuthRepository();
+            instance = new AuthRepository(context);
         return instance;
     }
 

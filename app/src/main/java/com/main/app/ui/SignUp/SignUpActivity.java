@@ -15,7 +15,7 @@ import com.main.app.repositories.implementations.AuthRepository;
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding activitySignUpBinding;
-    private AuthRepository authRepository = AuthRepository.getInstance();
+    private AuthRepository authRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     void init() {
+        this.authRepository = AuthRepository.getInstance(getApplicationContext());
         this.activitySignUpBinding.btnRegister.setOnClickListener(view -> {
             String name = this.activitySignUpBinding.etUsername.getText().toString();
             String email = this.activitySignUpBinding.etEmail.getText().toString();

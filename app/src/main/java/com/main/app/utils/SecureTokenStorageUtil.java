@@ -27,8 +27,8 @@ public class SecureTokenStorageUtil {
     private static final String AES_MODE = "AES/GCM/NoPadding";
     private KeyStore keyStore;
     private SharedPreferences sharedPreferences;
-    private Context context;
-
+    private final Context context;
+    @SuppressLint("StaticFieldLeak")
     private static SecureTokenStorageUtil instance;
 
     private SecureTokenStorageUtil(Context context) throws Exception {

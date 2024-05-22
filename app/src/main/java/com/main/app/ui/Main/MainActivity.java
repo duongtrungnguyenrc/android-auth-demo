@@ -16,6 +16,7 @@ import com.main.app.databinding.ActivityMainBinding;
 import com.main.app.repositories.implementations.AuthRepository;
 import com.main.app.repositories.implementations.UserRepository;
 import com.main.app.ui.SignIn.SignInActivity;
+import com.main.app.utils.SecureTokenStorageUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,24 +25,38 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding activityMainBinding;
-    private UserRepository userRepository = UserRepository.getInstance();
-    private AuthRepository authRepository = AuthRepository.getInstance();
+    private UserRepository userRepository;
+    private AuthRepository authRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
-        init();
-        loadProfile();
+        try {
+            init();
+            loadProfile();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    void init() {
+    void init() throws Exception {
+        userRepository = UserRepository.getInstance(getApplicationContext());
+        authRepository = AuthRepository.getInstance(getApplicationContext());
+        SecureTokenStorageUtil secureTokenStorageUtil = SecureTokenStorageUtil.getInstance(getApplicationContext());
+
         this.activityMainBinding.btnSignOut.setOnClickListener(view -> {
             this.authRepository.signOut(new IActionCallback<String>() {
                 @Override
                 public void onSuccess(String message) {
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    try {
+                        secureTokenStorageUtil.storeTokens("", "");
+                        finish();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 @Override
@@ -56,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
         userRepository.loadProfile(new IActionCallback<User>() {
             @Override
             public void onSuccess(User response) {
-                activityMainBinding.txtEmail.setText(response.name);
+                activityMainBinding.txtName.setText(response.name);
+                activityMainBinding.txtEmail.setText(response.email);
+                activityMainBinding.txtRole.setText(response.role);
             }
 
             @Override

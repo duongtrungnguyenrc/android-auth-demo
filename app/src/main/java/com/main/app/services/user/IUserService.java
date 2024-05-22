@@ -1,4 +1,4 @@
-package com.main.app.services.auth;
+package com.main.app.services.user;
 
 import com.main.app.data.models.User;
 
@@ -6,6 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface IUserService {
-    @GET("/user/profile")
+    @GET("user/profile")
     Call<User> getUserProfiile();
 }

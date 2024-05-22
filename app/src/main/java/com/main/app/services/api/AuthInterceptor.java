@@ -1,7 +1,6 @@
 package com.main.app.services.api;
 
-
-import android.app.Application;
+import android.util.Log;
 
 import com.main.app.utils.SecureTokenStorageUtil;
 
@@ -24,8 +23,12 @@ public class AuthInterceptor implements Interceptor {
         Request originalRequest = chain.request();
 
         String accessToken = null;
+        String refreshToken = null;
         try {
             accessToken = this.secureTokenStorageUtil.getAccessToken();
+            refreshToken = this.secureTokenStorageUtil.getRefreshToken();
+            Log.d("interceptor-access", accessToken);
+            Log.d("interceptor-refresh", refreshToken);
             Request newRequest = originalRequest.newBuilder()
                     .header("Authorization", "Bearer " + accessToken)
                     .build();
